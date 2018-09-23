@@ -1,25 +1,49 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:list/models/entry.dart';
 import 'package:list/new_page.dart';
 
-void main()=> runApp(new App());
-
-class App extends StatelessWidget {
-  @override 
-  Widget build(BuildContext context){
-    return new MaterialApp(
+void main() {
+  runApp(new MaterialApp(
       theme: new ThemeData(
         primarySwatch: Colors.blueGrey,
         primaryColor: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey[50] : null,),
       home: new HomePage(),
-      //routes: <String, WidgetBuilder>{
-      //  "/a": (BuildContext context) => new NewPage("new page"),
-      //}
-    );
-  }
+    )
+  );
+
+} 
+
+class HomePage extends StatefulWidget {
+  @override
+  HomePageState createState() => new HomePageState();
 }
 
-class HomePage extends StatelessWidget{
+class HomePageState extends State<HomePage>{
+  
+  List<Entry> entries;
+
+  void getData(){
+    
+    var _entries = new List<Entry>();
+
+    _entries.add(new Entry('Dribbble', 4.99));
+    _entries.add(new Entry('PS Network', 9.99));
+    _entries.add(new Entry('Apple Music', 4.99));
+
+
+    this.setState(() {
+      entries = _entries;
+    });
+  }
+
+  @override
+  void initState(){
+    this.getData(); 
+  }
+  
   @override
   Widget build(BuildContext context){
     return new Scaffold(
@@ -69,33 +93,26 @@ class HomePage extends StatelessWidget{
       ),
       body: new Container(
         margin: const EdgeInsets.all(10.0),
-        child: new Card(
-          child: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const ListTile(
-                leading: const Icon(Icons.album),
-                title: const Text('The Enchanted Nightingale'),
-                subtitle: const Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
-              ),
-              new ButtonTheme.bar( // make buttons use the appropriate styles for cards
-                child: new ButtonBar(
-                  children: <Widget>[
-                    new FlatButton(
-                      child: const Text('BUY TICKETS'),
-                      onPressed: () { /* ... */ },
-                    ),
-                    new FlatButton(
-                      child: const Text('LISTEN'),
-                      onPressed: () { /* ... */ },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        child: new ListView.builder(
+          itemCount: entries == null ? 0 : entries.length,
+          itemBuilder: (BuildContext context, int index){
+            return new Card(
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  new ListTile(
+                    leading: Icon(Icons.settings_ethernet),
+                    title: new Text(entries[index].name),
+                    subtitle: new Text(entries[index].value.toString()),
+                  )
+                ],
+              ) 
+              
+              //new Text(entries[index].name),
+            );
+          }
         )
       )
-    );
+    );  
   }
 }
