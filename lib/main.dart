@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:list/models/entry.dart';
 import 'package:list/new_page.dart';
 
-void main() {
-  runApp(new MaterialApp(
-      theme: new ThemeData(
-        primarySwatch: Colors.blueGrey,
-        primaryColor: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey[50] : null,),
-      home: new HomePage(),
-    )
-  );
+void main() => runApp(new MyApp());
 
-} 
+class MyApp extends StatelessWidget{
+   @override
+     Widget build(BuildContext context){
+       return new MaterialApp(
+        theme: new ThemeData(
+          primarySwatch: Colors.blueGrey,
+          primaryColor: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey[50] : null,),
+        home: new HomePage(),
+      );
+     }
+}
 
 class HomePage extends StatefulWidget {
   @override
@@ -29,7 +32,7 @@ class HomePageState extends State<HomePage>{
     
     var _entries = new List<Entry>();
 
-    _entries.add(new Entry('Dribbble', 4.99));
+    _entries.add(new Entry('Dribbbles', 4.99));
     _entries.add(new Entry('PS Network', 9.99));
     _entries.add(new Entry('Apple Music', 4.99));
 
@@ -112,7 +115,33 @@ class HomePageState extends State<HomePage>{
             );
           }
         )
-      )
+      ),
+      floatingActionButton: new FloatingActionButton(
+        backgroundColor: Colors.blueAccent,
+        tooltip: 'Add',
+        child: Icon(Icons.add),
+        onPressed: () {
+           Navigator.of(context).push(new MaterialPageRoute(
+              builder: (BuildContext context) => 
+                new AddPage()));
+            }
+       ),
     );  
+  }
+}
+
+class AddPage extends StatelessWidget{
+
+  AddPage();
+
+  @override
+  Widget build(BuildContext context){
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("Add new expense"),
+      ),
+      body: new Center(
+        child: new Text(''),)
+    );
   }
 }
