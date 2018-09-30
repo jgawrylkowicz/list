@@ -13,18 +13,23 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage>{
   
   List<Entry> entries;
+  double value;
 
   void getData(){
     
     var _entries = new List<Entry>();
+    double _value = 0.00;
 
     _entries.add(new Entry('Dribbbles', 4.99));
     _entries.add(new Entry('PS Network', 9.99));
     _entries.add(new Entry('Apple Music', 4.99));
 
 
+    _entries.forEach((entry) => _value += entry.value);
+
     this.setState(() {
       entries = _entries;
+      value = _value;
     });
   }
 
@@ -37,8 +42,25 @@ class HomePageState extends State<HomePage>{
   Widget build(BuildContext context){
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("List App"),
+        backgroundColor: Colors.white,
+        title: new Text("My Expenses"),
         elevation: defaultTargetPlatform == TargetPlatform.android ? 5.0 : 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () async {
+
+              final entry = await Navigator.of(context).push(
+                new MaterialPageRoute(
+                builder: (BuildContext context) => 
+                  new AddPage()));
+
+              if (entry != null){
+                entries.add(entry);
+              }
+            }
+          )
+        ]
       ),
       drawer: new Drawer(
         child: new ListView(
@@ -109,22 +131,46 @@ class HomePageState extends State<HomePage>{
           }
         )
       ),
-      floatingActionButton: new FloatingActionButton(
-        backgroundColor: Colors.blueAccent,
-        tooltip: 'Add',
-        child: Icon(Icons.add),
-        onPressed: () async {
-
-          final entry = await Navigator.of(context).push(
-            new MaterialPageRoute(
-            builder: (BuildContext context) => 
-              new AddPage()));
-
-          if (entry != null){
-            entries.add(entry);
-          }
-        }
-       ),
+      bottomNavigationBar: new BottomAppBar(
+        child: new Container(
+         //color: Colors.red,
+         margin: const EdgeInsets.all(16.0),
+         child: Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: <Widget>[
+             Column(
+               mainAxisSize: MainAxisSize.min, // the height of the bar
+               crossAxisAlignment: CrossAxisAlignment.start, //for adjusting left
+               children: <Widget>[
+                    Text(
+               'Average Expenses',
+               style: TextStyle(
+                 fontSize: 17.0,
+                 fontWeight: FontWeight.w700
+               ),
+               ),
+                  Text(
+               'PER MONTH',
+               style: TextStyle(
+                 fontSize: 13.0,
+                 color: Colors.grey,
+                 fontWeight: FontWeight.w700
+               ),
+               ),
+               ],
+            ),
+          
+                Text(
+               "EUR " + this.value.toString(),
+               style: TextStyle(
+                 fontSize: 17.0,
+                 fontWeight: FontWeight.w700
+               ),
+               )
+           ],
+           )
+       )
+      ),
     );  
   }
 }
